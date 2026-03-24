@@ -1,0 +1,40 @@
+services:
+  mqtt:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: apppass
+      POSTGRES_DB: sensordb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      MQTT_URL: mqtt://mqtt:1883
+      MQTT_TOPIC: sensors/#
+      PG_URL: postgres://app:apppass@postgres:5432/sensordb
+    depends_on:
+      - mqtt
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+
+
