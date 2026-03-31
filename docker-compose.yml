@@ -34,7 +34,15 @@ services:
       - postgres
     restart: unless-stopped
 
+  frontend:
+    build: ./frontend
+    environment:
+      PG_URL: postgres://app:apppass@postgres:5432/sensordb
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
 volumes:
   pgdata:
-
-
