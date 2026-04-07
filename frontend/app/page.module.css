@@ -145,3 +145,171 @@
   font-size: 0.8rem;
   color: #9ca3af;
 }
+
+.dashboardGrid {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(320px, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .dashboardGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+
+.liveCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.heroSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.eyebrow {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.heroValue {
+ font-size: clamp(3rem, 6vw, 4rem); 
+  line-height: 1;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+}
+
+.statusPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusLabel {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.statusText {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.6rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  letter-spacing: 0.02em;
+}
+
+.statusGood {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+.statusTooDark {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.statusTooBright {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.statusDefault {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.metricCard {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 14px;
+  
+  min-height: unset; /* 🔥 vigtigt */
+}
+
+.metricLabel {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.metricValue {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.metricValueSmall {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.5;
+}
+
+.recommendationPanel {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  padding: 16px 18px;
+}
+
+.recommendationLabel {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.recommendationValue {
+  margin: 0;
+   font-size: 1rem;
+  line-height: 1.5;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.footerRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 700px) {
+  .metricGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroValue {
+    font-size: 4rem;
+  }
+}
