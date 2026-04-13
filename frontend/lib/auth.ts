@@ -1,3 +1,4 @@
+/*
 import { SignJWT, jwtVerify } from "jose";
 
 // Henter secret fra environment variables
@@ -56,6 +57,55 @@ export async function verifyAuthToken(token: string) {
 
     // Returnerer de data vi lagde i tokenet
     // (payload kommer fra JWT)
+    return {
+        sub: payload.sub as string,
+        email: payload.email as string,
+        role: payload.role as string,
+    };
+}
+
+*/
+
+
+import { SignJWT, jwtVerify } from "jose";
+
+export type AuthUser = {
+    sub: string;
+    email: string;
+    role: string;
+};
+
+function getSecretKey() {
+    const secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+        throw new Error("Missing JWT_SECRET");
+    }
+
+    return new TextEncoder().encode(secret);
+}
+
+export async function signAuthToken(user: AuthUser) {
+    const secretKey = getSecretKey();
+
+    return new SignJWT({
+        email: user.email,
+        role: user.role,
+    })
+        .setProtectedHeader({ alg: "HS256" })
+        .setSubject(user.sub)
+        .setIssuedAt()
+        .setExpirationTime("7d")
+        .sign(secretKey);
+}
+
+export async function verifyAuthToken(token: string) {
+    const secretKey = getSecretKey();
+
+    const { payload } = await jwtVerify(token, secretKey, {
+        algorithms: ["HS256"],
+    });
+
     return {
         sub: payload.sub as string,
         email: payload.email as string,
