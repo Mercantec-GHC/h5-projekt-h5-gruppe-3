@@ -38,47 +38,41 @@ function getSunContext(date, lat, lng) {
 
 function evaluateLux(lux, sunPhase, solarAngle) {
     let status = "ok";
-    let recommendation = "Lysniveauet er passende";
+    let recommendation = "";
 
     if (sunPhase === "day") {
         if (solarAngle > 20) {
             if (lux < 500) {
                 status = "too_dark";
-                recommendation =
-                    "Det er tydelig dag, men lux er lavt. Åbn gardinerne eller tænd lys.";
+                recommendation = "Gå ud og få noget dagslys";
             } else if (lux > 10000) {
                 status = "too_bright";
-                recommendation =
-                    "Der er meget kraftigt lys. Dæmp lyset eller afskærm vinduet lidt.";
+                recommendation = "Dæmp lyset";
             }
         } else {
             if (lux < 300) {
                 status = "too_dark";
-                recommendation =
-                    "Det er dag, men lysniveauet er lavt. Åbn gardinerne eller tænd lys.";
+                recommendation = "Gå ud og få noget dagslys";
             } else if (lux > 5000) {
                 status = "too_bright";
-                recommendation =
-                    "Lysniveauet er højt for dagtid. Dæmp lyset hvis det føles skarpt.";
+                recommendation = "Dæmp lyset";
             }
         }
     } else if (sunPhase === "dawn" || sunPhase === "dusk") {
         if (lux < 100) {
             status = "too_dark";
-            recommendation =
-                "Det er overgang mellem dag og nat. Tænd lidt lys for bedre komfort.";
+            recommendation = "Tænd lidt lys";
         } else if (lux > 1000) {
             status = "too_bright";
-            recommendation =
-                "Det er overgang mellem dag og nat, og lyset virker højt. Dæmp lyset lidt.";
+            recommendation = "Dæmp lyset";
         }
     } else if (sunPhase === "night") {
         if (lux > 100) {
             status = "too_bright";
-            recommendation = "Det er nat. Sluk eller dæmp lyset for et roligere miljø.";
+            recommendation = "Sluk eller dæmp lyset";
         } else if (lux < 1) {
             status = "ok";
-            recommendation = "Det er nat, og lysniveauet er meget lavt som forventet.";
+            recommendation = "";
         }
     }
 
@@ -174,4 +168,4 @@ start().catch((e) => {
 });
 
 // SEND MQTT DATA:
-// mosquitto_pub -h localhost -t sensors/device1 -m '{"deviceId":"device1","lux":250}'
+// mosquitto_pub -h localhost -t sensors/device1 -m '{"deviceId":"device1","lux":550}'

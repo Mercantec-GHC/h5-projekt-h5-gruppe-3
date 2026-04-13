@@ -1,10 +1,13 @@
-import styles from "./page.module.css";
-import LuxLiveCard from "./components/LuxLiveCard";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-    <main className={styles.page}>
-      <LuxLiveCard />
-    </main>
-  );
+export default async function HomePage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value;
+
+  if (token) {
+    redirect("/dashboard");
+  }
+
+  redirect("/login");
 }

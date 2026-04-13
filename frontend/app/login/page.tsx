@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from "./login.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,32 +42,40 @@ export default function LoginPage() {
   }
 
   return (
-    <main style={{ padding: 24, maxWidth: 420, margin: "0 auto" }}>
-      <h1>Login</h1>
+    <main className={styles.page}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>🔐 Login</h1>
 
-      <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className={styles.input}
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className={styles.input}
+          />
 
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Logger ind..." : "Login"}
-        </button>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={styles.button}
+          >
+            {isSubmitting ? "Logger ind..." : "Login"}
+          </button>
 
-        {error ? <p>{error}</p> : null}
-      </form>
+          {error && <p className={styles.error}>{error}</p>}
+        </form>
+      </div>
     </main>
   );
 }

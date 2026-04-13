@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "../page.module.css";
+import { Sun, Moon, Check, Lightbulb, Circle } from "lucide-react";
+import styles from "./LuxLive.module.css";
 
 type Measurement = {
   device_id: string;
@@ -30,19 +31,22 @@ function getStatusClass(status: string) {
   }
 }
 
-function formatSunPhase(phase: string) {
-  switch (phase) {
-    case "day":
-      return "Day";
-    case "dawn":
-      return "Dawn";
-    case "dusk":
-      return "Dusk";
-    case "night":
-      return "Night";
+function getStatusIcon(status: string) {
+  switch (status) {
+    case "ok":
+      return <Check size={16} />;
+    case "too_dark":
+      return <Moon size={16} />;
+    case "too_bright":
+      return <Sun size={16} />;
     default:
-      return phase;
+      return null;
   }
+}
+
+function getSolarIcon(angle: number | null) {
+  if (angle === null) return null;
+  return angle >= 0 ? <Sun size={16} /> : <Moon size={16} />;
 }
 
 function formatStatus(status: string) {
@@ -56,6 +60,10 @@ function formatStatus(status: string) {
     default:
       return status;
   }
+}
+
+function formatSunPhase(phase: string) {
+  return phase.charAt(0).toUpperCase() + phase.slice(1);
 }
 
 function formatMeasuredAt(dateString: string) {
@@ -88,7 +96,7 @@ export default function LuxLive({ initialData }: LuxLiveProps) {
         const json: Measurement = await res.json();
         setData(json);
       } catch (err) {
-        console.error("Fetch error:", err);
+        console.error(err);
       }
     };
 
@@ -101,64 +109,81 @@ export default function LuxLive({ initialData }: LuxLiveProps) {
   if (!data) return null;
 
   return (
-    <div className={styles.liveCardContent}>
-      <div className={styles.heroSection}>
-        <p className={styles.eyebrow}>Latest Lux Reading</p>
-        <p className={styles.heroValue}>{data.lux}</p>
+    <div className={styles.card}>
+      
 
-        <div className={styles.statusPanel}>
-          <p className={styles.statusLabel}>Status</p>
-          <p className={`${styles.statusText} ${getStatusClass(data.status)}`}>
-            {formatStatus(data.status)}
-          </p>
+      <div className={styles.hero}>
+        <div className={styles.heroLeft}>
+        
+
+          <div className={styles.heroValueRow}>
+            <p className={styles.heroValue}>{data.lux}</p>
+            <span className={styles.heroUnit}>lux</span>
+          </div>
+        </div>
+
+        <div className={`${styles.statusBadge} ${getStatusClass(data.status)}`}>
+          {getStatusIcon(data.status)}
+          <span>{formatStatus(data.status)}</span>
         </div>
       </div>
 
-      <div className={styles.metricGrid}>
-        <div className={styles.metricCard}>
-          <p className={styles.metricLabel}>Device</p>
-          <p className={styles.metricValue}>{data.device_id}</p>
+      <div className={styles.details}>
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Device</span>
+          <strong className={styles.detailValue}>{data.device_id}</strong>
         </div>
 
-        <div className={styles.metricCard}>
-          <p className={styles.metricLabel}>Measured Sun Phase</p>
-          <p className={styles.metricValue}>{formatSunPhase(data.sun_phase)}</p>
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Sun Phase</span>
+          <strong className={styles.detailValue}>
+            {formatSunPhase(data.sun_phase)}
+          </strong>
         </div>
 
-        <div className={styles.metricCard}>
-          <p className={styles.metricLabel}>Measured Solar Angle</p>
-          <p className={styles.metricValue}>
-            {data.solar_angle !== null && data.solar_angle !== undefined
-              ? `${data.solar_angle.toFixed(1)}°`
-              : "—"}
-          </p>
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Solar Angle</span>
+          <strong className={`${styles.detailValue} ${styles.inlineIcon}`}>
+            {getSolarIcon(data.solar_angle)}
+            {data.solar_angle !== null ? `${data.solar_angle.toFixed(1)}°` : "—"}
+          </strong>
         </div>
 
-        <div className={styles.metricCard}>
-          <p className={styles.metricLabel}>Measured At</p>
-          <p className={styles.metricValueSmall}>
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Measured</span>
+          <strong className={styles.detailValueMuted}>
             {formatMeasuredAt(data.created_at)}
-          </p>
+          </strong>
         </div>
       </div>
 
-      <div className={styles.recommendationPanel}>
-        <p className={styles.recommendationLabel}>Measurement Recommendation</p>
-        <p className={styles.recommendationValue}>{data.recommendation}</p>
-      </div>
+      {data.recommendation && (
+        <div className={styles.recommendationBox}>
+          <div className={styles.recommendationHeader}>
+            <Lightbulb size={16} />
+            <span className={styles.recommendationLabel}>Recommendation</span>
+          </div>
+          <p className={styles.recommendationText}>{data.recommendation}</p>
+        </div>
+      )}
 
-      <div className={styles.footerRow}>
+      <div className={styles.footer}>
+        <div className={styles.liveState}>
+          <Circle
+            size={10}
+            className={isPolling ? styles.liveActive : styles.livePaused}
+            fill="currentColor"
+          />
+          <span>{isPolling ? "Live updates on" : "Live updates paused"}</span>
+        </div>
+
         <button
           type="button"
+          onClick={() => setIsPolling((p) => !p)}
           className={styles.toggleButton}
-          onClick={() => setIsPolling((prev) => !prev)}
         >
-          {isPolling ? "Pause Live Updates" : "Resume Live Updates"}
+          {isPolling ? "Pause" : "Resume"}
         </button>
-
-        <p className={styles.liveText}>
-          Live status: {isPolling ? "ON" : "PAUSED"}
-        </p>
       </div>
     </div>
   );

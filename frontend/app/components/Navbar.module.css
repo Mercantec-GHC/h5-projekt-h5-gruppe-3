@@ -1,0 +1,133 @@
+.header {
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(10px);
+}
+
+.inner {
+  width: 100%;
+  
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.link {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.link:hover {
+  color: #ffffff;
+}
+
+.userBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 6px;
+}
+
+.userMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+}
+
+.userEmail {
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.userRole {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.78rem;
+  text-transform: capitalize;
+}
+
+.loginButton,
+.logoutButton {
+  border: none;
+  border-radius: 12px;
+  padding: 9px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.loginButton {
+  background: #6366f1;
+  color: white;
+}
+
+.logoutButton {
+  background: rgba(239, 68, 68, 0.14);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.loginButton:hover,
+.logoutButton:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 720px) {
+  .inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .userBox {
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 0;
+  }
+
+  .userMeta {
+    align-items: flex-start;
+  }
+}
