@@ -38,10 +38,14 @@ services:
 
   frontend:
     build: ./frontend
+    environment:
+      JWT_SECRET: jwt-secret-h5-projekt
+      PG_URL: postgres://app:apppass@postgres:5432/sensordb
     ports:
       - "3000:3000"
     depends_on:
       - backend
+      - postgres
     restart: unless-stopped
 
 volumes:
