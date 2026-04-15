@@ -17,7 +17,7 @@ Node.js ingestion service
 ↓  
 PostgreSQL database  
 ↓  
-Frontend (kommer senere)
+Frontend (Next.js)
 
 ---
 
@@ -28,6 +28,7 @@ Frontend (kommer senere)
 - Mosquitto (MQTT broker)  
 - PostgreSQL (database)  
 - Adminer (database UI)
+- Next.js (frontend)
 
 ---
 
