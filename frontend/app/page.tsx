@@ -11,3 +11,5 @@ export default async function HomePage() {
 
   redirect("/login");
 }
+
+// vi er geder 
