@@ -1,23 +1,29 @@
+// Wifi pakke til arduino
 #include <WiFiNINA.h>
+// MQTT pakke til arduino
 #include <PubSubClient.h>
+// Adgang til sensorer
 #include <Arduino_MKRIoTCarrier.h>
+// Netværkstid
 #include <WiFiUdp.h>
+// Henter tid fra internettet
 #include <NTPClient.h>
+// Settings (WIFI, MQTT, Device ID)
 #include "config.h"
 
-// OBJECTS
+// OBJECTS ( Initialisering af objekter til sensorer, wifi, mqtt, ntp osv. )
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 MKRIoTCarrier carrier;
 
-// NTP
+// Henter tid fra pool.ntp.org, ingen offset, opdatering hvert 60 sekund
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 60000);
 
-// LUX
+// Gemmer sidste lux måling, så man ikke får 0 i lux, hvis der ikke er ny data tilgængelig
 float lastLux = 0;
 
-// WIFI
+// WIFI - Opretter forbindelse til WiFi, og printer status i serial monitoren. Hvis forbindelsen fejler, prøver den igen hvert 2 sekund.
 void connectWiFi() {
     Serial.print("Connecting to WiFi");
     while (WiFi.begin(WIFI_SSID, WIFI_PASSWORD) != WL_CONNECTED) {
@@ -27,7 +33,7 @@ void connectWiFi() {
     Serial.println(" connected!");
 }
 
-// MQTT
+// MQTT - Forbinder til MQTT broker, og printer status i serial monitoren. Hvis forbindelsen fejler, prøver den igen hvert 2 sekund.
 void connectMQTT() {
     while (!client.connected()) {
         Serial.print("Connecting to MQTT...");
@@ -42,7 +48,7 @@ void connectMQTT() {
     }
 }
 
-// LUX (ingen 0)
+// LUX - Læser lux værdien fra sensoren, og returnerer true hvis der er ny data tilgængelig. Hvis der ikke er ny data, returneres false, og den sidste lux værdi bruges.
 bool readLux(float &lux) {
     if (carrier.Light.colorAvailable()) {
         int r, g, b, c;
@@ -50,12 +56,12 @@ bool readLux(float &lux) {
         lastLux = c;
         lux = lastLux;
         return true;
-    }
+    }           
     lux = lastLux;
     return false;
 }
 
-// 🕒 SIMPEL DANSK TID (kun korrekt klokkeslæt)
+// 🕒 SIMPEL DANSK TID
 String getFormattedTime() {
     timeClient.update();
 
@@ -74,7 +80,7 @@ String getFormattedTime() {
     return String(buffer);
 }
 
-// SETUP
+// SETUP - Starter serial kommunikation, sensorer, wifi, mqtt og ntp klienten.
 void setup() {
     Serial.begin(115200);
     delay(3000);
@@ -88,7 +94,7 @@ void setup() {
     timeClient.begin();
 }
 
-// LOOP
+// LOOP - Tjekker om MQTT forbindelsen er aktiv, og prøver at oprette den hvis den ikke er. Læser "lux" værdien, og hvis der er ny data, publiceres den til MQTT broker, og printes i serial monitoren.
 void loop() {
     if (!client.connected()) {
         connectMQTT();
@@ -107,7 +113,7 @@ void loop() {
         payload += "\"lux\":" + String(lux) ;
         // payload += "\"timestamp\":\"" + timestamp + "\"";
         payload += "}";
-
+        // Sender payload til MQTT topic "sensors/device1"
         client.publish("sensors/device1", payload.c_str());
 
         Serial.println(payload);
@@ -115,3 +121,4 @@ void loop() {
 // Læsning og publicering sker hvert 200ms (Hvis delay er på 30000ms, sker det hvert 30 sekund) (Hele tiden er 200ms)
     delay(200);
 }
+// Selvfølgelig er det ikke ægte lux, men en proxy for lysintensiteten, som kan bruges til at se ændringer i lysforholdene.
