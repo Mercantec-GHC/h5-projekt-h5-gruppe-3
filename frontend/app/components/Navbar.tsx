@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { verifyAuthToken } from "@/lib/auth";
+import LogoutButton from "./LogoutButton";
 import styles from "./Navbar.module.css";
 
 export default async function Navbar() {
@@ -22,51 +23,43 @@ export default async function Navbar() {
   }
 
   return (
-<header className={styles.header}>
-  <div className={styles.inner}>
-    
-    {/* LEFT SIDE */}
-    <div className={styles.left}>
-      <Link href="/" className={styles.brand}>
-        LUX MONITOR
-      </Link>
-
-      <nav className={styles.navLinks}>
-        <Link href="/" className={styles.link}>
-          Home
-        </Link>
-
-        {user && (
-          <Link href="/dashboard" className={styles.link}>
-            Dashboard
+    <header className={styles.header}>
+      <div className={styles.inner}>
+        <div className={styles.left}>
+          <Link href="/" className={styles.brand}>
+            LUX MONITOR
           </Link>
-        )}
-      </nav>
-    </div>
 
-    {/* RIGHT SIDE */}
-    <div className={styles.right}>
-      {user ? (
-        <div className={styles.userBox}>
-          <div className={styles.userMeta}>
-            <span className={styles.userEmail}>{user.email}</span>
-            <span className={styles.userRole}>{user.role}</span>
-          </div>
+          <nav className={styles.navLinks}>
+            <Link href="/" className={styles.link}>
+              Home
+            </Link>
 
-          <form action="/api/auth/logout" method="POST">
-            <button type="submit" className={styles.logoutButton}>
-              Logout
-            </button>
-          </form>
+            {user && (
+              <Link href="/dashboard" className={styles.link}>
+                Dashboard
+              </Link>
+            )}
+          </nav>
         </div>
-      ) : (
-        <Link href="/login" className={styles.loginButton}>
-          Login
-        </Link>
-      )}
-    </div>
 
-  </div>
-</header>
+        <div className={styles.right}>
+          {user ? (
+            <div className={styles.userBox}>
+              <div className={styles.userMeta}>
+                <span className={styles.userEmail}>{user.email}</span>
+                <span className={styles.userRole}>{user.role}</span>
+              </div>
+
+              <LogoutButton />
+            </div>
+          ) : (
+            <Link href="/login" className={styles.loginButton}>
+              Login
+            </Link>
+          )}
+        </div>
+      </div>
+    </header>
   );
 }
