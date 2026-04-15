@@ -114,7 +114,7 @@ void loop() {
         // payload += "\"timestamp\":\"" + timestamp + "\"";
         payload += "}";
         // Sender payload til MQTT topic "sensors/device1"
-        client.publish("sensors/device1", payload.c_str());
+        client.publish(MQTT_TOPIC, payload.c_str());
 
         Serial.println(payload);
     }
